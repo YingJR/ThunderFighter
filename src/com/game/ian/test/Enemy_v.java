@@ -1,17 +1,13 @@
-package com.game.ian.model;
+package com.game.ian.test;
 
-import com.game.ian.Animation;
 import com.game.ian.MainScene;
+import com.game.ian.Sprite;
+import com.game.ian.model.Bullet;
 
-/**
- * Created by matt1201 on 2016/8/9.
- */
-public class Fighter extends Animation {
+
+public class Enemy_v extends Sprite {
 	//移動方向
-	public boolean Up;
-	public boolean Down;	
-	public boolean Left;	
-	public boolean Right;	
+	public boolean Left,Right;
 	
 	//速度
 	private int speed = MainScene.Velocity_Fighter;
@@ -20,18 +16,14 @@ public class Fighter extends Animation {
 	private int x;
 	private int y;
 
-	public Fighter(MainScene scene, String img_path, int width, int height, int frame_count) {
-		super(scene, null, img_path, width, height, frame_count);
+	public Enemy_v(MainScene scene, String img_path, int width, int height) {
+		super(scene, img_path, width, height);
 	}	
 
 	// Fighter移動
 	private void move() {
-		if(Up){
-			y-=speed;
-		}
-		if(Down){
-			y+=speed;
-		}
+		y+=speed;
+
 		if(Left){
 			x-=speed;
 		}
@@ -66,4 +58,9 @@ public class Fighter extends Animation {
 		this.y=this.get_y();
 		 move();
 	}
+	
+	public void fire(Bullet bullet){
+		
+	}
+
 }
