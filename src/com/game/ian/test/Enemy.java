@@ -2,65 +2,34 @@ package com.game.ian.test;
 
 import com.game.ian.MainScene;
 import com.game.ian.Sprite;
-import com.game.ian.model.Bullet;
-
 
 public class Enemy extends Sprite {
-	//移動方向
-	public boolean Left,Right;
-	
-	//速度
-	private int speed = MainScene.Velocity_Fighter;
+	public static final int ENEMY_ALIVE_STATE = 0;
+	public static final int ENEMY_DEATH_STATE = 1;
+	static final int ENEMY_STEP_Y = 5;
+	// X,Y 座標位置
+	public int m_posX = 0;
+	public int m_posY = 0;
+	public int mAnimState = ENEMY_ALIVE_STATE;
 
-	//位置
-	private int x;
-	private int y;
+	public int mPlayID = 0;
 
 	public Enemy(MainScene scene, String img_path, int width, int height) {
 		super(scene, img_path, width, height);
-	}	
-
-	// Fighter移動
-	private void move() {
-		y+=speed;
-
-		if(Left){
-			x-=speed;
-		}
-		if(Right){
-			x+=speed;
-		}
-		setPosition(x, y);
-	}	
-
-	// 在設定位置判斷邊界
-	@Override
-	public void setPosition(int x, int y) {
-
-		if (x - get_width() / 2 < this._scene.get_rect().left) {
-			x = this._scene.get_rect().left + (get_width() / 2);
-		}
-		if (x + get_width() / 2 > this._scene.get_rect().right) {
-			x = this._scene.get_rect().right - (get_width() / 2);
-		}
-		if (y - get_height() / 2 < this._scene.get_rect().top) {
-			y = this._scene.get_rect().top + (get_height() / 2);
-		}
-		if (y + get_height() / 2 > this._scene.get_rect().bottom) {
-			y = this._scene.get_rect().bottom - (get_height() / 2);
-		}
-		super.setPosition(x, y);
+		init(200, 20);
 	}
 
-	// 更新狀態
+	// 初始化座標
+	public void init(int x, int y) {
+		m_posX = x;
+		m_posY = y;
+		mAnimState = ENEMY_ALIVE_STATE;
+		mPlayID = 0;
+	}
+
 	public void update() {
-		this.x=this.get_x();
-		this.y=this.get_y();
-		 move();
-	}
-	
-	public void fire(Bullet bullet){
-		
+		m_posY += ENEMY_STEP_Y;
+		setPosition(m_posX, m_posY);
 	}
 
 }

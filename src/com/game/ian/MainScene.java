@@ -9,8 +9,9 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.game.ian.model.Bullet;
-import com.game.ian.model.Fighter;
 import com.game.ian.model.Bullet.Type;
+import com.game.ian.model.Fighter;
+import com.game.ian.test.Enemy;
 
 /**
  * Created by Matt on 2016/8/8.
@@ -45,6 +46,7 @@ public class MainScene {
 
 	private Fighter _fighter;
 	private LinkedList<Bullet> bullets = new LinkedList<Bullet>();
+	private Enemy _enemy5;
 
 	public MainScene() {
 		_rect = new Insets(0, 0, main.WINDOWS_HEIGHT, main.WINDOWS_WIDTH);
@@ -82,6 +84,10 @@ public class MainScene {
 		SpawnFighter();
 		addToScene(_fighter);
 		
+		_enemy5 = new Enemy(this,"res\\enemy4.png", 80, 90);
+		_enemy5.setPosition(100, 100);
+		addToScene(_enemy5);
+		
 	}
 
 	// 重置飛機位置
@@ -110,7 +116,7 @@ public class MainScene {
 		updateFrame();
 		
 		_fighter.update();
-			
+		_enemy5.update();
 		for (int i = 0; i < bullets.size(); i++) {
 			Bullet bullet = bullets.get(i);
 			//如果超出畫面
@@ -153,9 +159,7 @@ public class MainScene {
 		}else if(key == KeyEvent.VK_RIGHT){
 			_fighter.Right=true;
 		}else if(key == KeyEvent.VK_CONTROL){
-//			Bullet tempb = new Bullet(this, "res\\bullet_enemy.png", 16, 20, _fighter.get_x(), _fighter.get_y(),Type.Fighter);
-//			addToScene(tempb, 1);
-//			bullets.add(tempb);
+
 		}
 		
 	}
@@ -175,8 +179,6 @@ public class MainScene {
 			Bullet tempb =new Bullet(this, "res\\bullet.png", 16, 20,_fighter.get_x(), _fighter.get_y(), Type.Fighter);
 			addToScene(tempb, 1);
 			bullets.add(tempb);
-			_fighter.fire(tempb);
-
 		}
 	}
 	
