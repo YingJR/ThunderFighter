@@ -26,7 +26,7 @@ public class main extends Canvas {
 
 	public static void main(String[] args) {
 		int borderWidth_bar = 40;
-		int borderWidth_side = 10;
+		int borderWidth_side = 0;
 
 		_frame.setSize(WINDOWS_WIDTH + borderWidth_side, WINDOWS_HEIGHT + borderWidth_bar);
 		_frame.add(_canvas, BorderLayout.CENTER);
@@ -63,7 +63,7 @@ public class main extends Canvas {
 
 			if (System.currentTimeMillis() - timer > 1000) {
 				timer = System.currentTimeMillis();
-				System.out.println("FPS :" + frames);
+//				System.out.println("FPS :" + frames);
 				frames = 0;
 			}
 			try {

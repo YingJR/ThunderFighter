@@ -46,14 +46,21 @@ public class MainScene {
 
 	private Fighter _fighter;
 	private LinkedList<Bullet> bullets = new LinkedList<Bullet>();
+	private LinkedList<Enemy> enemys = new LinkedList<Enemy>();
 	private Enemy _enemy5;
+	private Sprite _sprite_bg;
+	private Sprite _sprite_bgB;
 
 	public MainScene() {
 		_rect = new Insets(0, 0, main.WINDOWS_HEIGHT, main.WINDOWS_WIDTH);
 
-		Sprite _sprite_bg = new Sprite(this, "res\\bg.png", main.WINDOWS_WIDTH, main.WINDOWS_HEIGHT);
+		_sprite_bg = new Sprite(this, "res\\bg.png", main.WINDOWS_WIDTH, main.WINDOWS_HEIGHT);
 		_sprite_bg.setPosition(main.WINDOWS_WIDTH / 2, main.WINDOWS_HEIGHT / 2);
 		addToScene(_sprite_bg);
+
+		_sprite_bgB = new Sprite(this, "res\\bgB.png", main.WINDOWS_WIDTH, main.WINDOWS_HEIGHT);
+		_sprite_bgB.setPosition(main.WINDOWS_WIDTH / 2, -1 * main.WINDOWS_HEIGHT / 2);
+		addToScene(_sprite_bgB);
 
 		int left = 80;
 		Sprite _enemy1 = new Sprite(this, "res\\enemy1.png", 80, 80);
@@ -75,19 +82,19 @@ public class MainScene {
 		_enemy4.setPosition(left, main.WINDOWS_HEIGHT / 2);
 		addToScene(_enemy4);
 		left += 80;
-		
+
 		Sprite _bullet = new Bullet(this, "res\\bullet.png", 16, 20);
 		_bullet.setPosition(left, main.WINDOWS_HEIGHT / 2);
 		addToScene(_bullet);
-		
+
 		_fighter = new Fighter(this, "res\\fighter.png", 90, 60, 3);
 		SpawnFighter();
 		addToScene(_fighter);
-		
-		_enemy5 = new Enemy(this,"res\\enemy4.png", 80, 90);
+
+		_enemy5 = new Enemy(this, "res\\enemy4.png", 80, 90);
 		_enemy5.setPosition(100, 100);
 		addToScene(_enemy5);
-		
+
 	}
 
 	// 重置飛機位置
@@ -114,21 +121,25 @@ public class MainScene {
 	// 更新
 	public void update() {
 		updateFrame();
-		
+
 		_fighter.update();
 		_enemy5.update();
+		//滾動背景
+		updateBg();
+		
+		System.currentTimeMillis();
+
 		for (int i = 0; i < bullets.size(); i++) {
 			Bullet bullet = bullets.get(i);
-			//如果超出畫面
+			// 如果超出畫面
 			if (!bullet.get_is_exist()) {
 				bullets.remove(bullet);
 				removeFromScene(bullet);
 			}
-			bullet.update();			
+			bullet.update();
 		}
-	
-	}
 
+	}
 
 	// 移除場景物件
 	private void removeFromScene(Sprite sprite) {
@@ -141,46 +152,73 @@ public class MainScene {
 	private void addToScene(Sprite sprite) {
 		addToScene(sprite, 0);
 	}
-	//指定加入層
+
+	// 指定加入層
 	private void addToScene(Sprite sprite, int layer) {
 		_render_objects.add(new RenderLayer(sprite, layer));
 	}
 	
-	//按下鍵盤事件
-	public void keyPressed(KeyEvent e) {
-		int key = e.getKeyCode();
-		
-		if(key == KeyEvent.VK_UP){
-			_fighter.Up=true;
-		}else if(key == KeyEvent.VK_DOWN){
-			_fighter.Down=true;
-		}else if(key == KeyEvent.VK_LEFT){
-			_fighter.Left=true;
-		}else if(key == KeyEvent.VK_RIGHT){
-			_fighter.Right=true;
-		}else if(key == KeyEvent.VK_CONTROL){
+	
+	//滾動背景
+	private void updateBg() {
+		final int BG_SPEED = 2;
+		if (_sprite_bg != null && _sprite_bgB != null) {
+			int A_x = _sprite_bg.get_x();
+			int A_y = _sprite_bg.get_y();
+			int B_y = _sprite_bgB.get_y();
+
+			_sprite_bg.setPosition(A_x, A_y + BG_SPEED);
+			_sprite_bgB.setPosition(A_x, B_y + BG_SPEED);
+
+			if (A_y >= main.WINDOWS_HEIGHT / 2 + main.WINDOWS_HEIGHT) {
+				A_y = -1 * main.WINDOWS_HEIGHT / 2;
+				_sprite_bg.setPosition(A_x, A_y+ BG_SPEED );
+			}
+			if (B_y >= main.WINDOWS_HEIGHT / 2 + main.WINDOWS_HEIGHT) {
+				B_y = -1 * main.WINDOWS_HEIGHT / 2;
+				_sprite_bgB.setPosition(A_x, B_y + BG_SPEED);
+			}
 
 		}
-		
+
 	}
-	//釋放鍵盤事件
+
+	// 按下鍵盤事件
+	public void keyPressed(KeyEvent e) {
+		int key = e.getKeyCode();
+
+		if (key == KeyEvent.VK_UP) {
+			_fighter.Up = true;
+		} else if (key == KeyEvent.VK_DOWN) {
+			_fighter.Down = true;
+		} else if (key == KeyEvent.VK_LEFT) {
+			_fighter.Left = true;
+		} else if (key == KeyEvent.VK_RIGHT) {
+			_fighter.Right = true;
+		} else if (key == KeyEvent.VK_CONTROL) {
+
+		}
+
+	}
+
+	// 釋放鍵盤事件
 	public void keyReleased(KeyEvent e) {
 		int key = e.getKeyCode();
-		
-		if(key == KeyEvent.VK_UP){
-			_fighter.Up=false;
-		}else if(key == KeyEvent.VK_DOWN){
-			_fighter.Down=false;
-		}else if(key == KeyEvent.VK_LEFT){
-			_fighter.Left=false;
-		}else if(key == KeyEvent.VK_RIGHT){
-			_fighter.Right=false;
-		}else if(key == KeyEvent.VK_CONTROL){
-			Bullet tempb =new Bullet(this, "res\\bullet.png", 16, 20,_fighter.get_x(), _fighter.get_y(), Type.Fighter);
+
+		if (key == KeyEvent.VK_UP) {
+			_fighter.Up = false;
+		} else if (key == KeyEvent.VK_DOWN) {
+			_fighter.Down = false;
+		} else if (key == KeyEvent.VK_LEFT) {
+			_fighter.Left = false;
+		} else if (key == KeyEvent.VK_RIGHT) {
+			_fighter.Right = false;
+		} else if (key == KeyEvent.VK_CONTROL) {
+			Bullet tempb = new Bullet(this, "res\\bullet.png", 16, 20, _fighter.get_x(), _fighter.get_y(),
+					Type.Fighter);
 			addToScene(tempb, 1);
 			bullets.add(tempb);
 		}
 	}
-	
 
 }
