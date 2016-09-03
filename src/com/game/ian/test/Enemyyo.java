@@ -57,11 +57,14 @@ public class Enemyyo extends Sprite {
 
 		int bound_left = scene.get_rect().left + enemy.get_width() / 2;
 		int bound_right = scene.get_rect().right - enemy.get_width() / 2;
-
+		System.out.println(properties.Path+":"+bound_left+":"+bound_right);
 		int x = (int) (Math.random() * (bound_right - bound_left) + bound_left);
 		int y = scene.get_rect().top - enemy.get_height();
-
-		enemy.setPosition(x, y);
+		if(properties.Path.equals("res\\enemy2.png")){
+			enemy.setPosition(100, 100);
+		}else{
+			enemy.setPosition(x, y);
+		}
 		_last_spawn_tick = System.currentTimeMillis();
 
 		return enemy;

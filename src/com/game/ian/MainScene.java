@@ -12,6 +12,7 @@ import com.game.ian.model.Bullet;
 import com.game.ian.model.Bullet.Type;
 import com.game.ian.model.Fighter;
 import com.game.ian.test.Enemy;
+import com.game.ian.test.Enemyyo;
 
 /**
  * Created by Matt on 2016/8/8.
@@ -46,8 +47,9 @@ public class MainScene {
 
 	private Fighter _fighter;
 	private LinkedList<Bullet> bullets = new LinkedList<Bullet>();
-	private LinkedList<Enemy> enemys = new LinkedList<Enemy>();
+	private LinkedList<Enemyyo> enemys = new LinkedList<Enemyyo>();
 	private Enemy _enemy5;
+	private Enemyyo _enemy;
 	private Sprite _sprite_bg;
 	private Sprite _sprite_bgB;
 
@@ -94,7 +96,10 @@ public class MainScene {
 		_enemy5 = new Enemy(this, "res\\enemy4.png", 80, 90);
 		_enemy5.setPosition(100, 100);
 		addToScene(_enemy5);
-
+		
+//		_enemy= Enemyyo.Spawn(this);
+//		addToScene(_enemy);
+		
 	}
 
 	// 重置飛機位置
@@ -124,9 +129,28 @@ public class MainScene {
 
 		_fighter.update();
 		_enemy5.update();
-		//滾動背景
-		updateBg();
+
 		
+		if((_enemy=Enemyyo.Spawn(this))!=null){
+			enemys.add(_enemy);
+			addToScene(_enemy,4);
+		}
+		
+		for (int i = 0; i < enemys.size(); i++) {
+			Enemyyo enemy = enemys.get(i);
+			// 如果超出畫面
+			if (!enemy.get_is_exist()) {
+				enemys.remove(enemy);
+				removeFromScene(enemy);
+			}
+			enemy.update();
+		}
+		
+		
+		
+		// 滾動背景
+		updateBg();
+
 		System.currentTimeMillis();
 
 		for (int i = 0; i < bullets.size(); i++) {
@@ -157,9 +181,8 @@ public class MainScene {
 	private void addToScene(Sprite sprite, int layer) {
 		_render_objects.add(new RenderLayer(sprite, layer));
 	}
-	
-	
-	//滾動背景
+
+	// 滾動背景
 	private void updateBg() {
 		final int BG_SPEED = 2;
 		if (_sprite_bg != null && _sprite_bgB != null) {
@@ -172,7 +195,7 @@ public class MainScene {
 
 			if (A_y >= main.WINDOWS_HEIGHT / 2 + main.WINDOWS_HEIGHT) {
 				A_y = -1 * main.WINDOWS_HEIGHT / 2;
-				_sprite_bg.setPosition(A_x, A_y+ BG_SPEED );
+				_sprite_bg.setPosition(A_x, A_y + BG_SPEED);
 			}
 			if (B_y >= main.WINDOWS_HEIGHT / 2 + main.WINDOWS_HEIGHT) {
 				B_y = -1 * main.WINDOWS_HEIGHT / 2;
