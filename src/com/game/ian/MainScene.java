@@ -1,6 +1,7 @@
 package com.game.ian;
 
 import java.awt.Insets;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.util.Collections;
 import java.util.Comparator;
@@ -8,11 +9,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import com.game.ian.Animation.StatusListener;
 import com.game.ian.model.Bullet;
-import com.game.ian.model.Bullet.Type;
 import com.game.ian.model.Fighter;
 import com.game.ian.test.Enemy;
 import com.game.ian.test.Enemyyo;
+import com.game.ian.test.Explosion;
+import com.game.ian.test.SoundManager;
 
 /**
  * Created by Matt on 2016/8/8.
@@ -47,6 +50,7 @@ public class MainScene {
 
 	private Fighter _fighter;
 	private LinkedList<Bullet> bullets = new LinkedList<Bullet>();
+	private LinkedList<Bullet> Fbullets = new LinkedList<Bullet>();
 	private LinkedList<Enemyyo> enemys = new LinkedList<Enemyyo>();
 	private Enemy _enemy5;
 	private Enemyyo _enemy;
@@ -54,6 +58,8 @@ public class MainScene {
 	private Sprite _sprite_bgB;
 
 	public MainScene() {
+		SoundManager.initialSound();
+
 		_rect = new Insets(0, 0, main.WINDOWS_HEIGHT, main.WINDOWS_WIDTH);
 
 		_sprite_bg = new Sprite(this, "res\\bg.png", main.WINDOWS_WIDTH, main.WINDOWS_HEIGHT);
@@ -64,30 +70,30 @@ public class MainScene {
 		_sprite_bgB.setPosition(main.WINDOWS_WIDTH / 2, -1 * main.WINDOWS_HEIGHT / 2);
 		addToScene(_sprite_bgB);
 
-//		int left = 80;
-//		Sprite _enemy1 = new Sprite(this, "res\\enemy1.png", 80, 80);
-//		_enemy1.setPosition(left, main.WINDOWS_HEIGHT / 2);
-//		addToScene(_enemy1);
-//		left += 80;
-//
-//		Sprite _enemy2 = new Sprite(this, "res\\enemy2.png", 80, 80);
-//		_enemy2.setPosition(left, main.WINDOWS_HEIGHT / 2);
-//		addToScene(_enemy2);
-//		left += 80;
-//
-//		Sprite _enemy3 = new Sprite(this, "res\\enemy3.png", 80, 80);
-//		_enemy3.setPosition(left, main.WINDOWS_HEIGHT / 2);
-//		addToScene(_enemy3);
-//		left += 80;
-//
-//		Sprite _enemy4 = new Sprite(this, "res\\enemy4.png", 80, 80);
-//		_enemy4.setPosition(left, main.WINDOWS_HEIGHT / 2);
-//		addToScene(_enemy4);
-//		left += 80;
-//
-//		Sprite _bullet = new Bullet(this, "res\\bullet.png", 16, 20);
-//		_bullet.setPosition(left, main.WINDOWS_HEIGHT / 2);
-//		addToScene(_bullet);
+		// int left = 80;
+		// Sprite _enemy1 = new Sprite(this, "res\\enemy1.png", 80, 80);
+		// _enemy1.setPosition(left, main.WINDOWS_HEIGHT / 2);
+		// addToScene(_enemy1);
+		// left += 80;
+		//
+		// Sprite _enemy2 = new Sprite(this, "res\\enemy2.png", 80, 80);
+		// _enemy2.setPosition(left, main.WINDOWS_HEIGHT / 2);
+		// addToScene(_enemy2);
+		// left += 80;
+		//
+		// Sprite _enemy3 = new Sprite(this, "res\\enemy3.png", 80, 80);
+		// _enemy3.setPosition(left, main.WINDOWS_HEIGHT / 2);
+		// addToScene(_enemy3);
+		// left += 80;
+		//
+		// Sprite _enemy4 = new Sprite(this, "res\\enemy4.png", 80, 80);
+		// _enemy4.setPosition(left, main.WINDOWS_HEIGHT / 2);
+		// addToScene(_enemy4);
+		// left += 80;
+		//
+		// Sprite _bullet = new Bullet(this, "res\\bullet.png", 16, 20);
+		// _bullet.setPosition(left, main.WINDOWS_HEIGHT / 2);
+		// addToScene(_bullet);
 
 		_fighter = new Fighter(this, "res\\fighter.png", 90, 60, 3);
 		SpawnFighter();
@@ -96,10 +102,10 @@ public class MainScene {
 //		_enemy5 = new Enemy(this, "res\\enemy4.png", 80, 90);
 //		_enemy5.setPosition(100, 100);
 //		addToScene(_enemy5);
-		
-//		_enemy= Enemyyo.Spawn(this);
-//		addToScene(_enemy);
-		
+
+		// _enemy= Enemyyo.Spawn(this);
+		// addToScene(_enemy);
+
 	}
 
 	// 重置飛機位置
@@ -130,12 +136,12 @@ public class MainScene {
 		_fighter.update();
 //		_enemy5.update();
 
-		//如果生成不為null加入場景
-		if((_enemy=Enemyyo.Spawn(this))!=null){
+		// 如果生成不為null加入場景
+		if ((_enemy = Enemyyo.Spawn(this)) != null) {
 			enemys.add(_enemy);
-			addToScene(_enemy,4);
+			addToScene(_enemy, 4);
 		}
-		
+
 		for (int i = 0; i < enemys.size(); i++) {
 			Enemyyo enemy = enemys.get(i);
 			// 如果超出畫面
@@ -146,18 +152,16 @@ public class MainScene {
 			enemy.update();
 			Bullet b = enemy.checkFire();
 
-			if(b!=null){
-//				System.out.println(b);
+			if (b != null) {
+				// System.out.println(b);
 				addToScene(b, 4);
 				bullets.add(b);
 			}
 		}
-		
-		
-		
+
 		// 滾動背景
 		updateBg();
-		//TODO
+		// TODO
 		System.currentTimeMillis();
 
 		for (int i = 0; i < bullets.size(); i++) {
@@ -170,6 +174,19 @@ public class MainScene {
 			bullet.update();
 		}
 
+		for (int i = 0; i < Fbullets.size(); i++) {
+			Bullet bullet = Fbullets.get(i);
+			// 如果超出畫面
+			if (!bullet.get_is_exist()) {
+				Fbullets.remove(bullet);
+				removeFromScene(bullet);
+			}
+			bullet.update();
+		}
+
+		checkCollision();
+		
+		
 	}
 
 	// 移除場景物件
@@ -226,14 +243,27 @@ public class MainScene {
 		} else if (key == KeyEvent.VK_RIGHT) {
 			_fighter.Right = true;
 		} else if (key == KeyEvent.VK_CONTROL) {
-//			Bullet tempb = new Bullet(this, "res\\bullet.png", 16, 20, _fighter.get_x(), _fighter.get_y(),
-//					Type.Fighter);
-			Bullet tempb =_fighter.Fire();
-			if(tempb!=null){
+			// Bullet tempb = new Bullet(this, "res\\bullet.png", 16, 20,
+			// _fighter.get_x(), _fighter.get_y(),
+			// Type.Fighter);
+			Bullet tempb = _fighter.Fire();
+			if (tempb != null) {
 				addToScene(tempb, 1);
-				bullets.add(tempb);
+				Fbullets.add(tempb);
 			}
 
+		} else if (key == KeyEvent.VK_M) {
+			SoundManager.Mute();
+		} else if (key == KeyEvent.VK_COMMA) {
+
+			Explosion a = Explosion.newInstance(this);
+			a.setPosition(_fighter.get_x(), _fighter.get_y());
+
+			// a._listener.onCompleted(_fighter);
+			// java Collision Detection
+			addToScene(a);
+
+			// bullets.add(tempb);
 		}
 
 	}
@@ -251,11 +281,52 @@ public class MainScene {
 		} else if (key == KeyEvent.VK_RIGHT) {
 			_fighter.Right = false;
 		} else if (key == KeyEvent.VK_CONTROL) {
-//			Bullet tempb = new Bullet(this, "res\\bullet.png", 16, 20, _fighter.get_x(), _fighter.get_y(),
-//					Type.Fighter);
-//			addToScene(tempb, 1);
-//			bullets.add(tempb);
+			// Bullet tempb = new Bullet(this, "res\\bullet.png", 16, 20,
+			// _fighter.get_x(), _fighter.get_y(),
+			// Type.Fighter);
+			// addToScene(tempb, 1);
+			// bullets.add(tempb);
 		}
+	}
+
+	public boolean checkCollision() {
+
+		for (Enemyyo e : enemys) {
+			Rectangle r = new Rectangle(e.get_x(), e.get_y(), e.get_width(), e.get_height());
+
+			for (Bullet tb : Fbullets) {
+				Rectangle b = new Rectangle(tb.get_x(), tb.get_y(), tb.get_width(), tb.get_height());
+
+				// Assuming there is an intersect method, otherwise just
+				// handcompare the values
+				if (r.intersects(b)) {
+					// A Collision!
+					// we know which enemy (e), so we can call e.DoCollision();
+					SoundManager.playExplosion();
+					
+					StatusListener listener = new Animation.StatusListener() {						
+						@Override
+						public void onCompleted(Animation animation) {
+							removeFromScene(animation);
+						}
+					};	
+					
+					Explosion ex = e.DoCollision(listener);
+
+//					ex.setPosition(e.get_x(), e.get_y());
+					removeFromScene(e);
+					enemys.remove(e);
+					removeFromScene(tb);
+					Fbullets.remove(tb);
+					addToScene(ex, 4);
+//					System.out.println("Explosion");
+					return true;
+				}
+
+			}
+		}
+
+		return false;
 	}
 
 }

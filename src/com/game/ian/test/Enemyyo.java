@@ -3,6 +3,8 @@ package com.game.ian.test;
 import java.awt.Insets;
 import java.awt.Point;
 
+import com.game.ian.Animation;
+import com.game.ian.Animation.StatusListener;
 import com.game.ian.MainScene;
 import com.game.ian.Sprite;
 import com.game.ian.model.Bullet;
@@ -101,7 +103,7 @@ public class Enemyyo extends Sprite {
 		}
 		switch (this._current_direction.ordinal()) {
 		case 1:
-			setPosition(this._x, this._y + 1);
+			setPosition(this._x, this._y + 3);
 			break;
 		case 2:
 			setPosition(this._x - 1, this._y);
@@ -123,4 +125,13 @@ public class Enemyyo extends Sprite {
 		return this._fireController.fire(this._scene, FireController.Type.Enemy, MoveDirection.Down, position,
 				"res\\bullet_enemy.png", 20, 20, 3);
 	}
+	
+	public Explosion DoCollision(Animation.StatusListener listener){
+	
+		Explosion e = Explosion.newInstance(_scene,listener);
+		e.setPosition(this.get_x(), this.get_y());
+
+		return e;
+	}
+	
 }

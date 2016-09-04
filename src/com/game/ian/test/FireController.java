@@ -32,7 +32,7 @@ public class FireController {
 		Bullet2 b;
 
 		if(type == Type.Fighter){
-			b = new Bullet2(scene, res_path, w, h,-20);
+			b = new Bullet2(scene, res_path, w, h,-10);
 		}else{
 			b = new Bullet2(scene, res_path, w, h,3);
 		}
