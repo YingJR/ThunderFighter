@@ -26,8 +26,9 @@ public class Enemyyo extends Sprite {
 		}
 	}
 
-	public static Enemyyo.EnemyProperties[] ENEMY_IMAGES = { new Enemyyo.EnemyProperties("res\\enemy1.png", 80, 44, 50),
-			new Enemyyo.EnemyProperties("res\\enemy2.png", 60, 40, 40),
+	public static Enemyyo.EnemyProperties[] ENEMY_IMAGES = { 
+			new Enemyyo.EnemyProperties("res\\enemy1.png", 80, 44, 50),
+			new Enemyyo.EnemyProperties("res\\enemy2.png", 65, 40, 40),
 			new Enemyyo.EnemyProperties("res\\enemy3.png", 45, 25, 15),
 			new Enemyyo.EnemyProperties("res\\enemy4.png", 64, 30, 20) };
 	private static long _last_spawn_tick = 0L;
@@ -57,14 +58,13 @@ public class Enemyyo extends Sprite {
 
 		int bound_left = scene.get_rect().left + enemy.get_width() / 2;
 		int bound_right = scene.get_rect().right - enemy.get_width() / 2;
-		System.out.println(properties.Path+":"+bound_left+":"+bound_right);
+
 		int x = (int) (Math.random() * (bound_right - bound_left) + bound_left);
 		int y = scene.get_rect().top - enemy.get_height();
-		if(properties.Path.equals("res\\enemy2.png")){
-			enemy.setPosition(100, 100);
-		}else{
-			enemy.setPosition(x, y);
-		}
+
+		enemy.setPosition(x, y);
+		
+		
 		_last_spawn_tick = System.currentTimeMillis();
 
 		return enemy;
@@ -72,18 +72,18 @@ public class Enemyyo extends Sprite {
 
 	public void setPosition(int x, int y) {
 		super.setPosition(x, y);
-		if (x - get_width() / 2 < this._scene.get_rect().left - 50) {
+		if (x - get_width() / 2 < this._scene.get_rect().left - 80) {
 			this._is_exist = false;
 		}
-		if (x + get_width() / 2 > this._scene.get_rect().right + 50) {
+		if (x + get_width() / 2 > this._scene.get_rect().right + 80) {
 			this._is_exist = false;
 		}
-		if (y - get_height() / 2 < this._scene.get_rect().top - 50) {
+		if (y - get_height() / 2 < this._scene.get_rect().top - 80) {
 			this._is_exist = false;
 		}
-		if (y + get_height() / 2 > this._scene.get_rect().bottom + 50) {
+		if (y + get_height() / 2 > this._scene.get_rect().bottom + 80) {
 			this._is_exist = false;
-		}
+		}		
 	}
 
 	protected Enemyyo(MainScene scene, String img_path, int width, int height, int score) {
@@ -110,10 +110,11 @@ public class Enemyyo extends Sprite {
 			setPosition(this._x + 1, this._y);
 			break;
 		}
+
 	}
 
 	public Bullet checkFire() {
-		if (Math.random() * 100.0D > 0.3D) {
+		if (Math.random() * 100.0D > _fire_probability) {
 			return null;
 		}
 		Point position = get_position();

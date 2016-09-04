@@ -64,38 +64,38 @@ public class MainScene {
 		_sprite_bgB.setPosition(main.WINDOWS_WIDTH / 2, -1 * main.WINDOWS_HEIGHT / 2);
 		addToScene(_sprite_bgB);
 
-		int left = 80;
-		Sprite _enemy1 = new Sprite(this, "res\\enemy1.png", 80, 80);
-		_enemy1.setPosition(left, main.WINDOWS_HEIGHT / 2);
-		addToScene(_enemy1);
-		left += 80;
-
-		Sprite _enemy2 = new Sprite(this, "res\\enemy2.png", 80, 80);
-		_enemy2.setPosition(left, main.WINDOWS_HEIGHT / 2);
-		addToScene(_enemy2);
-		left += 80;
-
-		Sprite _enemy3 = new Sprite(this, "res\\enemy3.png", 80, 80);
-		_enemy3.setPosition(left, main.WINDOWS_HEIGHT / 2);
-		addToScene(_enemy3);
-		left += 80;
-
-		Sprite _enemy4 = new Sprite(this, "res\\enemy4.png", 80, 80);
-		_enemy4.setPosition(left, main.WINDOWS_HEIGHT / 2);
-		addToScene(_enemy4);
-		left += 80;
-
-		Sprite _bullet = new Bullet(this, "res\\bullet.png", 16, 20);
-		_bullet.setPosition(left, main.WINDOWS_HEIGHT / 2);
-		addToScene(_bullet);
+//		int left = 80;
+//		Sprite _enemy1 = new Sprite(this, "res\\enemy1.png", 80, 80);
+//		_enemy1.setPosition(left, main.WINDOWS_HEIGHT / 2);
+//		addToScene(_enemy1);
+//		left += 80;
+//
+//		Sprite _enemy2 = new Sprite(this, "res\\enemy2.png", 80, 80);
+//		_enemy2.setPosition(left, main.WINDOWS_HEIGHT / 2);
+//		addToScene(_enemy2);
+//		left += 80;
+//
+//		Sprite _enemy3 = new Sprite(this, "res\\enemy3.png", 80, 80);
+//		_enemy3.setPosition(left, main.WINDOWS_HEIGHT / 2);
+//		addToScene(_enemy3);
+//		left += 80;
+//
+//		Sprite _enemy4 = new Sprite(this, "res\\enemy4.png", 80, 80);
+//		_enemy4.setPosition(left, main.WINDOWS_HEIGHT / 2);
+//		addToScene(_enemy4);
+//		left += 80;
+//
+//		Sprite _bullet = new Bullet(this, "res\\bullet.png", 16, 20);
+//		_bullet.setPosition(left, main.WINDOWS_HEIGHT / 2);
+//		addToScene(_bullet);
 
 		_fighter = new Fighter(this, "res\\fighter.png", 90, 60, 3);
 		SpawnFighter();
 		addToScene(_fighter);
 
-		_enemy5 = new Enemy(this, "res\\enemy4.png", 80, 90);
-		_enemy5.setPosition(100, 100);
-		addToScene(_enemy5);
+//		_enemy5 = new Enemy(this, "res\\enemy4.png", 80, 90);
+//		_enemy5.setPosition(100, 100);
+//		addToScene(_enemy5);
 		
 //		_enemy= Enemyyo.Spawn(this);
 //		addToScene(_enemy);
@@ -128,9 +128,9 @@ public class MainScene {
 		updateFrame();
 
 		_fighter.update();
-		_enemy5.update();
+//		_enemy5.update();
 
-		
+		//如果生成不為null加入場景
 		if((_enemy=Enemyyo.Spawn(this))!=null){
 			enemys.add(_enemy);
 			addToScene(_enemy,4);
@@ -144,13 +144,20 @@ public class MainScene {
 				removeFromScene(enemy);
 			}
 			enemy.update();
+			Bullet b = enemy.checkFire();
+
+			if(b!=null){
+//				System.out.println(b);
+				addToScene(b, 4);
+				bullets.add(b);
+			}
 		}
 		
 		
 		
 		// 滾動背景
 		updateBg();
-
+		//TODO
 		System.currentTimeMillis();
 
 		for (int i = 0; i < bullets.size(); i++) {
@@ -219,6 +226,13 @@ public class MainScene {
 		} else if (key == KeyEvent.VK_RIGHT) {
 			_fighter.Right = true;
 		} else if (key == KeyEvent.VK_CONTROL) {
+//			Bullet tempb = new Bullet(this, "res\\bullet.png", 16, 20, _fighter.get_x(), _fighter.get_y(),
+//					Type.Fighter);
+			Bullet tempb =_fighter.Fire();
+			if(tempb!=null){
+				addToScene(tempb, 1);
+				bullets.add(tempb);
+			}
 
 		}
 
@@ -237,10 +251,10 @@ public class MainScene {
 		} else if (key == KeyEvent.VK_RIGHT) {
 			_fighter.Right = false;
 		} else if (key == KeyEvent.VK_CONTROL) {
-			Bullet tempb = new Bullet(this, "res\\bullet.png", 16, 20, _fighter.get_x(), _fighter.get_y(),
-					Type.Fighter);
-			addToScene(tempb, 1);
-			bullets.add(tempb);
+//			Bullet tempb = new Bullet(this, "res\\bullet.png", 16, 20, _fighter.get_x(), _fighter.get_y(),
+//					Type.Fighter);
+//			addToScene(tempb, 1);
+//			bullets.add(tempb);
 		}
 	}
 
