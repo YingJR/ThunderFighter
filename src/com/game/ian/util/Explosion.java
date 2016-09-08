@@ -1,4 +1,4 @@
-package com.game.ian.test;
+package com.game.ian.util;
 
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;

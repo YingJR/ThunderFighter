@@ -1,10 +1,9 @@
-package com.game.ian.test;
+package com.game.ian.util;
 
 import java.awt.Point;
 
 import com.game.ian.MainScene;
 import com.game.ian.model.Bullet;
-import com.game.ian.model.Bullet2;
 
 public class FireController {
 	public static final int FIRE_INTERVAL = 100;
@@ -25,16 +24,16 @@ public class FireController {
 
 	public Bullet fire(MainScene scene, FireController.Type type, MoveDirection direction, Point position,
 			String res_path, int w, int h, int speed) {
-		if (System.currentTimeMillis() - this._last_fire_tick < 100L) {
+		if (System.currentTimeMillis() - this._last_fire_tick < FIRE_INTERVAL) {
 			return null;
 		}
 		this._type = type;
-		Bullet2 b;
+		Bullet b;
 
 		if(type == Type.Fighter){
-			b = new Bullet2(scene, res_path, w, h,-10);
+			b = new Bullet(scene, res_path, w, h,position.x,position.y,Bullet.Type.Fighter);
 		}else{
-			b = new Bullet2(scene, res_path, w, h,3);
+			b = new Bullet(scene, res_path, w, h,position.x,position.y,Bullet.Type.Enemy);
 		}
 //			b = new Bullet(scene, res_path, w, h,position.x,position.y);
 		b.setPosition(position.x, position.y);

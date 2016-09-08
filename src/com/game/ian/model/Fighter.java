@@ -4,8 +4,8 @@ import java.awt.Point;
 
 import com.game.ian.Animation;
 import com.game.ian.MainScene;
-import com.game.ian.test.FireController;
-import com.game.ian.test.MoveDirection;
+import com.game.ian.util.FireController;
+import com.game.ian.util.MoveDirection;
 
 
 /**
@@ -80,7 +80,7 @@ public class Fighter extends Animation {
 		position.y -= get_height() / 2;
 
 		return this._fireController.fire(this._scene, FireController.Type.Fighter, MoveDirection.Up, position,
-				"res\\bullet.png", 20, 20, 7);
+				"res\\bullet.png", 16, 20, 7);
 	}
 
 }

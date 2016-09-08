@@ -26,13 +26,16 @@ public class Bullet extends Sprite {
 		return this._is_exist;
 	}
 
-	public Bullet(MainScene scene, String img_path, int width, int height) {
+	
+	public Bullet(MainScene scene, String img_path, int width, int height,int speed) {
 		super(scene, img_path, width, height);
+		this.speed =speed;
 	}
 
 	public Bullet(MainScene scene, String img_path, int width, int height, int get_x, int get_y, Type _type) {
 		super(scene, img_path, width, height);
 		setPosition(get_x, get_y);
+
 		if (_type == Bullet.Type.Fighter) {
 			speed = -1 * MainScene.Velocity_Bullet;//用乘以-1表示負數
 		} else if (_type == Bullet.Type.Enemy) {

@@ -1,18 +1,21 @@
-package com.game.ian.test;
+package com.game.ian.model;
 
 import java.awt.Insets;
 import java.awt.Point;
 
 import com.game.ian.Animation;
 import com.game.ian.Animation.StatusListener;
+import com.game.ian.util.Explosion;
+import com.game.ian.util.FireController;
+import com.game.ian.util.MoveDirection;
+import com.game.ian.util.FireController.Type;
 import com.game.ian.MainScene;
 import com.game.ian.Sprite;
-import com.game.ian.model.Bullet;
 
-public class Enemyyo extends Sprite {
+public class Enemy extends Sprite {
 	// 出生間隔
-	public static final int SPAWN_INTERVAL = 200;
-	private static final double _fire_probability = 0.3D;
+	public static final int SPAWN_INTERVAL = 2000;
+	private static final double _fire_probability = 0.5D;
 
 	static class EnemyProperties {
 		public String Path = "";
@@ -28,16 +31,17 @@ public class Enemyyo extends Sprite {
 		}
 	}
 
-	public static Enemyyo.EnemyProperties[] ENEMY_IMAGES = { 
-			new Enemyyo.EnemyProperties("res\\enemy1.png", 80, 44, 50),
-			new Enemyyo.EnemyProperties("res\\enemy2.png", 65, 40, 40),
-			new Enemyyo.EnemyProperties("res\\enemy3.png", 45, 25, 15),
-			new Enemyyo.EnemyProperties("res\\enemy4.png", 64, 30, 20) };
+	public static Enemy.EnemyProperties[] ENEMY_IMAGES = { 
+			new Enemy.EnemyProperties("res\\enemy1.png", 80, 44, 10),
+			new Enemy.EnemyProperties("res\\enemy2.png", 65, 40, 20),
+			new Enemy.EnemyProperties("res\\enemy3.png", 45, 25, 30),
+			new Enemy.EnemyProperties("res\\enemy4.png", 64, 30, 40) };
 	private static long _last_spawn_tick = 0L;
 	private boolean _is_exist = true;
 	private long _last_turn_direction_tick = 0L;
 	private MoveDirection _current_direction = MoveDirection.Down;
 	private FireController _fireController = new FireController();
+	private int speed=MainScene.Velocity_Enemy;
 	private int _score = 0;
 
 	public boolean get_is_exist() {
@@ -48,15 +52,15 @@ public class Enemyyo extends Sprite {
 		return this._score;
 	}
 
-	public static Enemyyo Spawn(MainScene scene) {
-		if (System.currentTimeMillis() - _last_spawn_tick < 200L) {
+	public static Enemy Spawn(MainScene scene) {
+		if (System.currentTimeMillis() - _last_spawn_tick < SPAWN_INTERVAL) {
 			return null;
 		}
 		int index = (int) (Math.random() * ENEMY_IMAGES.length);
 
-		Enemyyo.EnemyProperties properties = ENEMY_IMAGES[index];
+		Enemy.EnemyProperties properties = ENEMY_IMAGES[index];
 
-		Enemyyo enemy = new Enemyyo(scene, properties.Path, properties.Width, properties.Height, properties.Score);
+		Enemy enemy = new Enemy(scene, properties.Path, properties.Width, properties.Height, properties.Score);
 
 		int bound_left = scene.get_rect().left + enemy.get_width() / 2;
 		int bound_right = scene.get_rect().right - enemy.get_width() / 2;
@@ -88,7 +92,7 @@ public class Enemyyo extends Sprite {
 		}		
 	}
 
-	protected Enemyyo(MainScene scene, String img_path, int width, int height, int score) {
+	protected Enemy(MainScene scene, String img_path, int width, int height, int score) {
 		super(scene, img_path, width, height);
 		this._score = score;
 	}
@@ -103,7 +107,7 @@ public class Enemyyo extends Sprite {
 		}
 		switch (this._current_direction.ordinal()) {
 		case 1:
-			setPosition(this._x, this._y + 3);
+			setPosition(this._x, this._y + speed);
 			break;
 		case 2:
 			setPosition(this._x - 1, this._y);
@@ -123,7 +127,7 @@ public class Enemyyo extends Sprite {
 		position.y += get_height() / 2;
 
 		return this._fireController.fire(this._scene, FireController.Type.Enemy, MoveDirection.Down, position,
-				"res\\bullet_enemy.png", 20, 20, 3);
+				"res\\bullet_enemy.png", 20, 20, _scene.Velocity_Bullet_Enemy);
 	}
 	
 	public Explosion DoCollision(Animation.StatusListener listener){

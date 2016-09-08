@@ -11,11 +11,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.game.ian.Animation.StatusListener;
 import com.game.ian.model.Bullet;
+import com.game.ian.model.Enemy;
 import com.game.ian.model.Fighter;
-import com.game.ian.test.Enemy;
-import com.game.ian.test.Enemyyo;
-import com.game.ian.test.Explosion;
-import com.game.ian.test.SoundManager;
+import com.game.ian.util.Explosion;
+import com.game.ian.util.HpController;
+import com.game.ian.util.Label;
+import com.game.ian.util.SoundManager;
 
 /**
  * Created by Matt on 2016/8/8.
@@ -51,14 +52,16 @@ public class MainScene {
 	private Fighter _fighter;
 	private LinkedList<Bullet> bullets = new LinkedList<Bullet>();
 	private LinkedList<Bullet> Fbullets = new LinkedList<Bullet>();
-	private LinkedList<Enemyyo> enemys = new LinkedList<Enemyyo>();
-	private Enemy _enemy5;
-	private Enemyyo _enemy;
+	private LinkedList<Enemy> enemys = new LinkedList<Enemy>();
+
+	private Enemy _enemy;
 	private Sprite _sprite_bg;
 	private Sprite _sprite_bgB;
+	private Sprite hp = new HpController(this);
+	private Label label = new Label(this, 100, 20);
 
 	public MainScene() {
-		SoundManager.initialSound();
+		 SoundManager.initialSound();
 
 		_rect = new Insets(0, 0, main.WINDOWS_HEIGHT, main.WINDOWS_WIDTH);
 
@@ -70,42 +73,13 @@ public class MainScene {
 		_sprite_bgB.setPosition(main.WINDOWS_WIDTH / 2, -1 * main.WINDOWS_HEIGHT / 2);
 		addToScene(_sprite_bgB);
 
-		// int left = 80;
-		// Sprite _enemy1 = new Sprite(this, "res\\enemy1.png", 80, 80);
-		// _enemy1.setPosition(left, main.WINDOWS_HEIGHT / 2);
-		// addToScene(_enemy1);
-		// left += 80;
-		//
-		// Sprite _enemy2 = new Sprite(this, "res\\enemy2.png", 80, 80);
-		// _enemy2.setPosition(left, main.WINDOWS_HEIGHT / 2);
-		// addToScene(_enemy2);
-		// left += 80;
-		//
-		// Sprite _enemy3 = new Sprite(this, "res\\enemy3.png", 80, 80);
-		// _enemy3.setPosition(left, main.WINDOWS_HEIGHT / 2);
-		// addToScene(_enemy3);
-		// left += 80;
-		//
-		// Sprite _enemy4 = new Sprite(this, "res\\enemy4.png", 80, 80);
-		// _enemy4.setPosition(left, main.WINDOWS_HEIGHT / 2);
-		// addToScene(_enemy4);
-		// left += 80;
-		//
-		// Sprite _bullet = new Bullet(this, "res\\bullet.png", 16, 20);
-		// _bullet.setPosition(left, main.WINDOWS_HEIGHT / 2);
-		// addToScene(_bullet);
-
 		_fighter = new Fighter(this, "res\\fighter.png", 90, 60, 3);
 		SpawnFighter();
 		addToScene(_fighter);
-
-//		_enemy5 = new Enemy(this, "res\\enemy4.png", 80, 90);
-//		_enemy5.setPosition(100, 100);
-//		addToScene(_enemy5);
-
-		// _enemy= Enemyyo.Spawn(this);
-		// addToScene(_enemy);
-
+		
+		label.set_text("");
+		label.setPosition(80, 20);
+		addToScene(label,5);
 	}
 
 	// 重置飛機位置
@@ -134,16 +108,16 @@ public class MainScene {
 		updateFrame();
 
 		_fighter.update();
-//		_enemy5.update();
+		// _enemy5.update();
 
 		// 如果生成不為null加入場景
-		if ((_enemy = Enemyyo.Spawn(this)) != null) {
+		if ((_enemy = Enemy.Spawn(this)) != null) {
 			enemys.add(_enemy);
 			addToScene(_enemy, 4);
 		}
 
 		for (int i = 0; i < enemys.size(); i++) {
-			Enemyyo enemy = enemys.get(i);
+			Enemy enemy = enemys.get(i);
 			// 如果超出畫面
 			if (!enemy.get_is_exist()) {
 				enemys.remove(enemy);
@@ -185,8 +159,18 @@ public class MainScene {
 		}
 
 		checkCollision();
-		
-		
+
+		if (checkDamage()) {
+			if (((HpController) hp).get_hp() == 0) {
+				SpawnFighter();
+				((HpController) hp).reset();
+			}
+
+		}
+
+		hp.setPosition(_fighter._x, _fighter._y+_fighter.get_height()/2);
+		addToScene(hp, 4);
+
 	}
 
 	// 移除場景物件
@@ -253,7 +237,8 @@ public class MainScene {
 			}
 
 		} else if (key == KeyEvent.VK_M) {
-			SoundManager.Mute();
+			// SoundManager.Mute();
+			// SoundManager2.playExplosion();
 		} else if (key == KeyEvent.VK_COMMA) {
 
 			Explosion a = Explosion.newInstance(this);
@@ -291,7 +276,7 @@ public class MainScene {
 
 	public boolean checkCollision() {
 
-		for (Enemyyo e : enemys) {
+		for (Enemy e : enemys) {
 			Rectangle r = new Rectangle(e.get_x(), e.get_y(), e.get_width(), e.get_height());
 
 			for (Bullet tb : Fbullets) {
@@ -302,24 +287,25 @@ public class MainScene {
 				if (r.intersects(b)) {
 					// A Collision!
 					// we know which enemy (e), so we can call e.DoCollision();
-					SoundManager.playExplosion();
-					
-					StatusListener listener = new Animation.StatusListener() {						
+					// SoundManager.playExplosion();
+//					SoundManager.playExplosion();
+
+					StatusListener listener = new Animation.StatusListener() {
 						@Override
 						public void onCompleted(Animation animation) {
 							removeFromScene(animation);
 						}
-					};	
-					
+					};
+
 					Explosion ex = e.DoCollision(listener);
 
-//					ex.setPosition(e.get_x(), e.get_y());
+					// ex.setPosition(e.get_x(), e.get_y());
 					removeFromScene(e);
 					enemys.remove(e);
 					removeFromScene(tb);
 					Fbullets.remove(tb);
 					addToScene(ex, 4);
-//					System.out.println("Explosion");
+					// System.out.println("Explosion");
 					return true;
 				}
 
@@ -327,6 +313,49 @@ public class MainScene {
 		}
 
 		return false;
+	}
+
+	public boolean checkDamage() {
+
+		Sprite f = _fighter;
+		Rectangle r = new Rectangle(f.get_x(), f.get_y(), f.get_width(), f.get_height());
+
+		for (Bullet tb : bullets) {
+			Rectangle b = new Rectangle(tb.get_x(), tb.get_y(), tb.get_width(), tb.get_height());
+
+			// Assuming there is an intersect method, otherwise just
+			// handcompare the values
+			if (r.intersects(b)) {
+				// A Collision!
+				// we know which enemy (e), so we can call e.DoCollision();
+
+				// StatusListener listener = new Animation.StatusListener() {
+				// @Override
+				// public void onCompleted(Animation animation) {
+				// removeFromScene(animation);
+				// }
+				// };
+				((HpController) hp).damage(10);
+
+				// Explosion ex = f.DoCollision(listener);
+
+				// ex.setPosition(e.get_x(), e.get_y());
+				// removeFromScene(e);
+				// enemys.remove(e);
+				removeFromScene(tb);
+				bullets.remove(tb);
+				// addToScene(ex, 4);
+				// System.out.println("Explosion");
+				return true;
+			}
+
+		}
+
+		return false;
+	}
+
+	public void setFPS(int frames) {
+		label.set_text("FPS:" + frames);
 	}
 
 }

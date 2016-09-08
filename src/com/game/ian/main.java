@@ -63,7 +63,8 @@ public class main extends Canvas {
 
 			if (System.currentTimeMillis() - timer > 1000) {
 				timer = System.currentTimeMillis();
-				System.out.println("FPS :" + frames);
+//				System.out.println("FPS :" + frames);
+				_main_scene.setFPS(frames);
 				frames = 0;
 			}
 			try {
