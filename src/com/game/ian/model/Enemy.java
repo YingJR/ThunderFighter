@@ -14,8 +14,8 @@ import com.game.ian.Sprite;
 
 public class Enemy extends Sprite {
 	// 出生間隔
-	public static final int SPAWN_INTERVAL = 2000;
-	private static final double _fire_probability = 0.5D;
+	public static final int SPAWN_INTERVAL = 1000;
+	private static final double _fire_probability = 0.3D;
 
 	static class EnemyProperties {
 		public String Path = "";

@@ -19,7 +19,6 @@ public class SoundManager {
 			try {
 				this.player.open(file);
 			} catch (BasicPlayerException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -29,7 +28,6 @@ public class SoundManager {
 			try {
 				this.player.open(file);
 			} catch (BasicPlayerException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			return super.clone();

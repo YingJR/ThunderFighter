@@ -17,7 +17,8 @@ public class Fighter extends Animation {
 	public boolean Down;
 	public boolean Left;
 	public boolean Right;
-
+	public boolean shooting;
+	
 	// 移動速度
 	private int speed = MainScene.Velocity_Fighter;
 
@@ -26,6 +27,7 @@ public class Fighter extends Animation {
 	// 位置
 	private int x;
 	private int y;
+
 
 	public Fighter(MainScene scene, String img_path, int width, int height, int frame_count) {
 		super(scene, null, img_path, width, height, frame_count);
@@ -77,10 +79,11 @@ public class Fighter extends Animation {
 	public Bullet Fire() {
 
 		Point position = get_position();
-		position.y -= get_height() / 2;
+		position.y = position.y - get_height() / 2+20;
 
 		return this._fireController.fire(this._scene, FireController.Type.Fighter, MoveDirection.Up, position,
-				"res\\bullet.png", 16, 20, 7);
+				"res\\bullet.png", 16, 20, speed);
 	}
+	
 
 }
