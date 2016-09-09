@@ -298,7 +298,7 @@ public class MainScene {
 
 					Explosion ex = e.DoCollision(listener);
 					Score += e.get_score();
-
+					SoundManager.playExplosion();
 					// ex.setPosition(e.get_x(), e.get_y());
 					removeFromScene(e);
 					enemys.remove(e);
@@ -345,7 +345,7 @@ public class MainScene {
 				
 				addToScene(e, 4);
 				((HpController) hp).damage(10);
-
+				SoundManager.playExplosion();
 				removeFromScene(tb);
 				bullets.remove(tb);
 

@@ -14,7 +14,7 @@ import com.game.ian.Sprite;
 
 public class Enemy extends Sprite {
 	// 出生間隔
-	public static final int SPAWN_INTERVAL = 1000;
+	public static final int SPAWN_INTERVAL = 2000;
 	private static final double _fire_probability = 0.3D;
 
 	static class EnemyProperties {
@@ -31,8 +31,7 @@ public class Enemy extends Sprite {
 		}
 	}
 
-	public static Enemy.EnemyProperties[] ENEMY_IMAGES = { 
-			new Enemy.EnemyProperties("res\\enemy1.png", 80, 44, 10),
+	public static Enemy.EnemyProperties[] ENEMY_IMAGES = { new Enemy.EnemyProperties("res\\enemy1.png", 80, 44, 10),
 			new Enemy.EnemyProperties("res\\enemy2.png", 65, 40, 20),
 			new Enemy.EnemyProperties("res\\enemy3.png", 45, 25, 30),
 			new Enemy.EnemyProperties("res\\enemy4.png", 64, 30, 40) };
@@ -41,7 +40,7 @@ public class Enemy extends Sprite {
 	private long _last_turn_direction_tick = 0L;
 	private MoveDirection _current_direction = MoveDirection.Down;
 	private FireController _fireController = new FireController();
-	private int speed=MainScene.Velocity_Enemy;
+	private int speed = MainScene.Velocity_Enemy;
 	private int _score = 0;
 
 	public boolean get_is_exist() {
@@ -69,8 +68,7 @@ public class Enemy extends Sprite {
 		int y = scene.get_rect().top - enemy.get_height();
 
 		enemy.setPosition(x, y);
-		
-		
+
 		_last_spawn_tick = System.currentTimeMillis();
 
 		return enemy;
@@ -89,7 +87,7 @@ public class Enemy extends Sprite {
 		}
 		if (y + get_height() / 2 > this._scene.get_rect().bottom + 80) {
 			this._is_exist = false;
-		}		
+		}
 	}
 
 	protected Enemy(MainScene scene, String img_path, int width, int height, int score) {
@@ -129,13 +127,13 @@ public class Enemy extends Sprite {
 		return this._fireController.fire(this._scene, FireController.Type.Enemy, MoveDirection.Down, position,
 				"res\\bullet_enemy.png", 20, 20, _scene.Velocity_Bullet_Enemy);
 	}
-	
-	public Explosion DoCollision(Animation.StatusListener listener){
-	
-		Explosion e = Explosion.newInstance(_scene,listener);
+
+	public Explosion DoCollision(Animation.StatusListener listener) {
+
+		Explosion e = Explosion.newInstance(_scene, listener);
 		e.setPosition(this.get_x(), this.get_y());
 
 		return e;
 	}
-	
+
 }

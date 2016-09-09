@@ -51,6 +51,8 @@ public class SoundManager {
 			_player_bg = new BasicPlayer();
 			_player_bg.open(file);
 			_player_bg.play();
+			
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -62,7 +64,12 @@ public class SoundManager {
 		}
 		try {
 			SoundManager.SoundSample sound = (SoundManager.SoundSample) _player_explosion.clone();
-			System.out.println(sound.player.getStatus());
+			
+						
+			if(sound.player.getStatus() == 3){
+				System.out.println("OK");
+			}
+			
 			sound.player.play();
 		} catch (Exception e) {
 			e.printStackTrace();
